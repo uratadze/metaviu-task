@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('business_url',50)->nullable();
             $table->unsignedBigInteger('country_id');
             $table->string('address',100)->nullable();
-            $table->string('user_token')->nullable();
+            $table->string('user_token',100)->nullable();
             $table->timestamps();
 
             $table->foreign('company_id')->references('id')->on('companies')->onUpdate('cascade')->onDelete('cascade');

@@ -17,4 +17,5 @@ $router->get('/', function () use ($router) {
     return responder()->success([123]);
 });
 
+$router->get('/test', 'UserController@register');
 
