@@ -32,12 +32,11 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'business_url',
         'country_id',
         'address',
+        'user_token',
     ];
 
     /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
+     * @var string[]
      */
     protected $hidden = [
         'password',

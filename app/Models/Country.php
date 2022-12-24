@@ -9,7 +9,12 @@ class Country extends Model
     /**
      * @var string
      */
-    protected $table = 'country';
+    protected $table = 'countries';
+
+    /**
+     * @var bool
+     */
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.

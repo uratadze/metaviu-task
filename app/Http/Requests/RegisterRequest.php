@@ -26,12 +26,12 @@ class RegisterRequest extends FormRequest
         return [
             'first_name' => 'required|regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/|max:30',
             'last_name' => 'required|regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/|max:30',
-            'email' => 'required|email|max:30',
+            'email' => 'required|email|max:30|unique:users',
             'password' => 'required',
             'company_name' => 'required|regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/|max:50',
             'business_url' => 'url|max:50',
-            'country_id' => 'required|integer',
-            'address' => 'regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/|max:100',
+            'country_id' => 'required|integer|exists:countries,id',
+            'address' => 'string|max:100',
         ];
     }
 }

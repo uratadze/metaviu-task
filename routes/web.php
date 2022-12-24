@@ -16,6 +16,11 @@
 $router->get('/', function () use ($router) {
     return responder()->success([123]);
 });
+//'middleware' => 'auth',
+$router->group(['prefix' => 'api'], function () use ($router) {
+    $router->get('/register', 'UserController@register');
+    $router->get('/authorisation', 'UserController@authorisation');
+    $router->get('/check-token', 'UserController@loginWithToken');
+});
 
-$router->get('/test', 'UserController@register');
 

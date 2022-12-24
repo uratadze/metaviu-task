@@ -12,6 +12,11 @@ class Company extends Model
     protected $table = 'companies';
 
     /**
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
