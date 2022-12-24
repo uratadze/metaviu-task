@@ -6,8 +6,8 @@ use App\Http\Requests\AuthorisationRequest;
 use App\Http\Requests\CheckTokenRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Services\UserService;
-use Flugg\Responder\Http\Responses\SuccessResponseBuilder;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Hash;
 
 
 class UserController extends Controller
@@ -42,28 +42,35 @@ class UserController extends Controller
             $request->address
         );
 
-        return responder()->success($user)->respond(200);
+        return responder()->success($user)->respond();
     }
 
     /**
      * @param AuthorisationRequest $request
-     * @return SuccessResponseBuilder
+     * @return JsonResponse
      */
     public function authorisation(AuthorisationRequest $request)
     {
-        $user = $this->userService->authorize($request->email, $request->password);
+        $user = $this->userService->authorize($request->email);
 
-        return responder()->success([$user]);
+        return Hash::check($request->password, $user->password) ?
+            responder()->success($user)->respond() :
+            $this->userService->unauthorisedResponse();
     }
 
     /**
      * @param CheckTokenRequest $request
-     * @return SuccessResponseBuilder
+     * @return JsonResponse
      */
     public function loginWithToken(CheckTokenRequest $request)
     {
         $user = $this->userService->checkToken($request->user_token);
 
-        return responder()->success([$user]);
+        if($user===null)
+        {
+            return $this->userService->unauthorisedResponse();
+        }
+
+        return responder()->success($user)->respond();
     }
 }

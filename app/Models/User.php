@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Lumen\Auth\Authorizable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
@@ -42,12 +43,22 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'password',
     ];
 
-    public function company()
+    /**
+     * Many to one relation.
+     *
+     * @return BelongsTo
+     */
+    public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
     }
 
-    public function country()
+    /**
+     * Many to one relation.
+     *
+     * @return BelongsTo
+     */
+    public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class);
     }

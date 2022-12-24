@@ -1,5 +1,7 @@
 <?php
 
+use \App\Http\Middleware\ApiKeyMiddleware;
+
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 /*
@@ -13,14 +15,13 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return responder()->success([123]);
-});
-//'middleware' => 'auth',
-$router->group(['prefix' => 'api'], function () use ($router) {
-    $router->get('/register', 'UserController@register');
-    $router->get('/authorisation', 'UserController@authorisation');
-    $router->get('/check-token', 'UserController@loginWithToken');
-});
+$router->group(
+    ['prefix' => 'api', 'middleware' => [ApiKeyMiddleware::class]],
+    function () use ($router) {
+        $router->get('/register', 'UserController@register');
+        $router->get('/authorisation', 'UserController@authorisation');
+        $router->get('/check-token', 'UserController@loginWithToken');
+    }
+);
 
 

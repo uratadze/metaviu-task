@@ -4,6 +4,9 @@ namespace App\Services;
 
 use App\Models\Company;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 
 class UserService extends User
@@ -49,18 +52,41 @@ class UserService extends User
         return $user->with(['company', 'country']);
     }
 
-    public function authorize($email, $password)
+    /**
+     * Get user data from email.
+     *
+     * @param $email
+     * @return Builder|Model|object|null
+     */
+    public function authorize($email)
     {
         $user = $this->with(['company', 'country'])->where(['email' => $email])->first();
 
-        return Hash::check($password, $user->password) ? $user : [];
+        return $user;
     }
 
+    /**
+     * Get user data from token.
+     *
+     * @param $token
+     * @return Builder|Model|object|null
+     */
     public function checkToken($token)
     {
         $user = $this->with(['company', 'country'])->where('user_token', $token)->first();
 
         return $user;
     }
+
+    /**
+     * User unauthorised request response.
+     *
+     * @return JsonResponse
+     */
+    public function unauthorisedResponse(): JsonResponse
+    {
+        return responder()->error(401, 'Unauthorised request')->respond(401);
+    }
+
 }
 
