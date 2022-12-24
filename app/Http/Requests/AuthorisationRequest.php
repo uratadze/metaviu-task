@@ -39,7 +39,7 @@ class AuthorisationRequest extends FormRequest
     {
         return [
             'email' => 'required|email|max:30',
-            'password' => 'required',
+            'password' => 'required|min:4',
         ];
     }
 }

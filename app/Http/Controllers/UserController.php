@@ -6,6 +6,7 @@ use App\Http\Requests\AuthorisationRequest;
 use App\Http\Requests\CheckTokenRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Services\UserService;
+use Flugg\Responder\Http\Responses\SuccessResponseBuilder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 
@@ -27,11 +28,11 @@ class UserController extends Controller
 
     /**
      * @param RegisterRequest $request
-     * @return JsonResponse
+     * @return SuccessResponseBuilder | JsonResponse
      */
     public function register(RegisterRequest $request)
     {
-        $user = $this->userService->registration(
+        $userSaved = $this->userService->registration(
             $request->first_name,
             $request->last_name,
             $request->email,
@@ -42,35 +43,34 @@ class UserController extends Controller
             $request->address
         );
 
-        return responder()->success($user)->respond();
+        return $userSaved
+            ? responder()->success()
+            : responder()->error(500, 'Server error')->respond(500);
     }
 
     /**
      * @param AuthorisationRequest $request
      * @return JsonResponse
      */
-    public function authorisation(AuthorisationRequest $request)
+    public function authorisation(AuthorisationRequest $request): JsonResponse
     {
         $user = $this->userService->authorize($request->email);
 
-        return Hash::check($request->password, $user->password) ?
-            responder()->success($user)->respond() :
-            $this->userService->unauthorisedResponse();
+        return Hash::check($request->password, $user->password)
+            ? responder()->success($user)->respond()
+            : $this->userService->unauthorisedResponse();
     }
 
     /**
      * @param CheckTokenRequest $request
      * @return JsonResponse
      */
-    public function loginWithToken(CheckTokenRequest $request)
+    public function loginWithToken(CheckTokenRequest $request): JsonResponse
     {
         $user = $this->userService->checkToken($request->user_token);
 
-        if($user===null)
-        {
-            return $this->userService->unauthorisedResponse();
-        }
-
-        return responder()->success($user)->respond();
+        return $user===null
+            ? $this->userService->unauthorisedResponse()
+            : responder()->success($user)->respond();
     }
 }

@@ -22,7 +22,7 @@ class UserService extends User
      * @param $countryId
      * @param $businessUrl
      * @param $address
-     * @return mixed
+     * @return bool
      */
     public function registration(
         $firstName,
@@ -34,22 +34,17 @@ class UserService extends User
         $businessUrl = null,
         $address = null
     ){
-            $company = Company::where('name', $companyName)->first();
-            $company = $company === null ? Company::create(['name' => $companyName]) : $company;
+        $this->first_name = $firstName;
+        $this->last_name = $lastName;
+        $this->email = $email;
+        $this->password = Hash::make($password);
+        $this->company_id = Company::firstOrCreate(['name' => $companyName])->id;
+        $this->business_url = $businessUrl;
+        $this->country_id = $countryId;
+        $this->address = $address;
+        $this->user_token = Hash::make('random_token');
 
-            $user = $this->create([
-                'first_name' => $firstName,
-                'last_name' => $lastName,
-                'email' => $email,
-                'password' => Hash::make($password),
-                'company_id' => $company->id,
-                'business_url' => $businessUrl,
-                'country_id' => $countryId,
-                'address' => $address,
-                'user_token' => Hash::make('random_token')
-            ]);
-
-        return $user->with(['company', 'country']);
+        return $this->save();
     }
 
     /**
@@ -85,7 +80,7 @@ class UserService extends User
      */
     public function unauthorisedResponse(): JsonResponse
     {
-        return responder()->error(401, 'Unauthorised request')->respond(401);
+        return responder()->error(401, 'Unauthorized request')->respond(401);
     }
 
 }

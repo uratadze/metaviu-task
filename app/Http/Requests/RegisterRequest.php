@@ -41,7 +41,7 @@ class RegisterRequest extends FormRequest
             'first_name' => 'required|regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/|max:30',
             'last_name' => 'required|regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/|max:30',
             'email' => 'required|email|max:30|unique:users',
-            'password' => 'required',
+            'password' => 'required|min:4',
             'company_name' => 'required|regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/|max:50',
             'business_url' => 'url|max:50',
             'country_id' => 'required|integer|exists:countries,id',
