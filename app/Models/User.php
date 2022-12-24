@@ -41,4 +41,14 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $hidden = [
         'password',
     ];
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
 }

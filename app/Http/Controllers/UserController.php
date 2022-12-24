@@ -7,6 +7,8 @@ use App\Http\Requests\CheckTokenRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Services\UserService;
 use Flugg\Responder\Http\Responses\SuccessResponseBuilder;
+use Illuminate\Http\JsonResponse;
+
 
 class UserController extends Controller
 {
@@ -25,7 +27,7 @@ class UserController extends Controller
 
     /**
      * @param RegisterRequest $request
-     * @return SuccessResponseBuilder
+     * @return JsonResponse
      */
     public function register(RegisterRequest $request)
     {
@@ -40,7 +42,7 @@ class UserController extends Controller
             $request->address
         );
 
-        return responder()->success([$user]);
+        return responder()->success($user)->respond(200);
     }
 
     /**

@@ -46,20 +46,19 @@ class UserService extends User
                 'user_token' => Hash::make('random_token')
             ]);
 
-        return $user;
+        return $user->with(['company', 'country']);
     }
 
     public function authorize($email, $password)
     {
-        $user = $this->where(['email' => $email])->first();
-        $user = Hash::check($password, $user->password) ? $user : null;
+        $user = $this->with(['company', 'country'])->where(['email' => $email])->first();
 
-        return $user;
+        return Hash::check($password, $user->password) ? $user : [];
     }
 
     public function checkToken($token)
     {
-        $user = $this->where('user_token', $token)->first();
+        $user = $this->with(['company', 'country'])->where('user_token', $token)->first();
 
         return $user;
     }
